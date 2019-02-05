@@ -15,7 +15,7 @@ const register = function (server, serverOptions) {
         handler: function (request, h) {
 
             return {
-                message: 'Welcome to the API.'
+                message: 'Welcome to the Enshire API.'
             };
         }
     });

@@ -20,16 +20,16 @@ const main = async function () {
         default: 'mongodb://localhost:27017/'
     };
     const mongodbUri = await Promptly.prompt(`MongoDB URI: (${options.default})`, options);
-
+    console.log(mongodbUri)
     options = {
-        default: 'frame'
+        default: 'enshire'
     };
     const mongodbName = await Promptly.prompt(`MongoDB name: (${options.default})`, options);
 
     // connect to db
 
     const db = await MongoModels.connect({ uri: mongodbUri, db: mongodbName });
-
+    console.log(db);
     if (!db) {
         throw Error('Could not connect to MongoDB.');
     }

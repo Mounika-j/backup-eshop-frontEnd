@@ -143,7 +143,9 @@ More details on [Admin & Admin Group Permissions](https://github.com/jedireza/fr
                         Path.resolve(__dirname, './server/models/auth-attempt'),
                         Path.resolve(__dirname, './server/models/session'),
                         Path.resolve(__dirname, './server/models/status'),
-                        Path.resolve(__dirname, './server/models/user')
+                        Path.resolve(__dirname, './server/models/user'),
+                        Path.resolve(__dirname, './server/models/job-listing'),
+                        Path.resolve(__dirname, './server/models/job-application')
                     ],
                     autoIndex: Config.get('/hapiMongoModels/autoIndex')
                 }
@@ -153,6 +155,12 @@ More details on [Admin & Admin Group Permissions](https://github.com/jedireza/fr
             },
             {
                 plugin: './server/api/accounts'
+            },
+            {
+                plugin: './server/api/job-listings'
+            },
+            {
+                plugin: './server/api/job-applications'
             },
             {
                 plugin: './server/api/admin-groups'
