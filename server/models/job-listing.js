@@ -12,7 +12,7 @@ const schema = Joi.object({
     location: Joi.string().required(),
     description: Joi.string().required(),
     timeCreated: Joi.date().default(NewDate(), 'time of creation'),
-    userId: Joi.string().required()
+    // userId: Joi.string()
 });
 
 
