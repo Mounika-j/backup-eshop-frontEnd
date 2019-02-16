@@ -59,7 +59,7 @@ const register = function (server, serverOptions) {
             }
         },
         handler: async function (request, h) {
-            
+            console.log(request);
             const fullName = request.payload.fullName;
             const email = request.payload.email;
             const contact = request.payload.contact;

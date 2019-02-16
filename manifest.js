@@ -4,7 +4,6 @@ const Config = require('./config');
 const Package = require('./package.json');
 const Path = require('path');
 
-
 const criteria = {
     env: process.env.NODE_ENV
 };
@@ -17,9 +16,10 @@ const manifest = {
             request: ['error']
         },
         routes: {
-            security: true
+            security: true,
+            cors: true
         },
-        port: Config.get('/port/web')
+        port: Config.get('/port/web'),
     },
     register: {
         plugins: [

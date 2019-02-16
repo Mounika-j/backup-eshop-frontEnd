@@ -55,6 +55,7 @@ const register = function (server, serverOptions) {
             }
         },
         handler: async function (request, h) {
+            console.log(request);
             
             const jobTitle = request.payload.jobTitle;
             const location = request.payload.location;

@@ -21,6 +21,7 @@ const config = {
             $default: 9000
         }
     },
+    cors: true,
     authAttempts: {
         forIp: 50,
         forIpAndUser: 7

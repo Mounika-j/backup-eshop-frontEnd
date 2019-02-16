@@ -42,6 +42,8 @@ class JobApplication extends MongoModels {
             jobListingId: jobListingId
         });
 
+        console.log(document);
+        
         const jobapplications = await this.insertOne(document);
         return jobapplications[0];
 
