@@ -50,18 +50,20 @@ const register = function (server, serverOptions) {
                 payload: {
                     jobTitle: Joi.string().required(),
                     location: Joi.string().required(),
-                    description: Joi.string().required()
+                    description: Joi.string().required(),
+                    experience: Joi.number()
                 }
             }
         },
         handler: async function (request, h) {
-            console.log(request);
+            // console.log(request);
             
             const jobTitle = request.payload.jobTitle;
             const location = request.payload.location;
             const description = request.payload.description;
+            const experience = request.payload.experience;
             
-            return await JobListing.create(jobTitle, location, description);
+            return await JobListing.create(jobTitle, location, description, experience);
         }
     });
 
@@ -105,7 +107,8 @@ const register = function (server, serverOptions) {
                 payload: {
                     jobTitle: Joi.string().required(),
                     location: Joi.string().required(),
-                    description: Joi.string().required()
+                    description: Joi.string().required(),
+                    experience: Joi.number().required()
                 },
                 params: {
                     id : Joi.string().required().description('the id to update the job-listing')

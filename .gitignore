@@ -2,3 +2,4 @@ node_modules/*
 test/artifacts/*
 .env
 .eslintrc.js
+server/api/resumes/*

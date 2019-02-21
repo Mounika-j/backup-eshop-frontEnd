@@ -4,7 +4,7 @@ const Joi = require('joi');
 const Preware = require('../preware');
 const JobApplication = require('../models/job-application');
 const User = require('../models/user');
-
+const fs = require('fs');
 
 const register = function (server, serverOptions) {
 
@@ -54,12 +54,13 @@ const register = function (server, serverOptions) {
                     currentLocation: Joi.string().required(),
                     willingToRelocate: Joi.string(),
                     visaStatus: Joi.string().required(),
-                    jobListingId: Joi.string().required()
+                    jobListingId: Joi.string().required(),
+                    resumeKey: Joi.string().required()
                 }
             }
         },
         handler: async function (request, h) {
-            console.log(request);
+            
             const fullName = request.payload.fullName;
             const email = request.payload.email;
             const contact = request.payload.contact;
@@ -67,8 +68,9 @@ const register = function (server, serverOptions) {
             const willingToRelocate = request.payload.willingToRelocate;
             const visaStatus = request.payload.visaStatus;
             const jobListingId = request.payload.jobListingId;
-            
-            return await JobApplication.create(fullName, email, contact, currentLocation, willingToRelocate, visaStatus, jobListingId);
+            const resumeKey = request.payload.resumeKey;
+
+            return await JobApplication.create(fullName, email, contact, currentLocation, willingToRelocate, visaStatus, jobListingId, resumeKey);
         }
     });
 
@@ -175,6 +177,56 @@ const register = function (server, serverOptions) {
             return { message: 'Success.' };
         }
     });
+
+    server.route({
+        method: 'POST',
+        path: '/api/resumes/uploads',
+        options: {
+            payload: {
+                output: 'stream',
+                parse: true,
+                allow: 'multipart/form-data',
+                maxBytes: 2 * 1024 * 1024
+            },
+            auth: false
+        },
+        handler: async function (request, h) {
+            var identifier = + new Date();
+            var filepath = __dirname +'/resumes/' + identifier + '/';
+            fs.mkdirSync(filepath, { recursive: true });
+            request.payload.resume.pipe(fs.createWriteStream(
+                 filepath + request.payload.resume.hapi.filename,
+                {
+                    flags: 'a'
+                }
+            )); 
+            return { file: request.payload.resume.hapi.filename,
+                     key: identifier,
+                     message: 'Success.' }
+        }
+
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/api/job-applications/{id}/resume',
+        options: {
+            tags: ['api', 'resumes'],
+            validate: {
+                params: {
+                    id: Joi.string().required().description('the id of the job-application to get resume')
+                }
+            },
+            auth: false
+        }, 
+        handler: async function (request, h) {
+            // console.log(request.params.id);
+            // const jobapplication = await JobApplication.findById(request.params.id);
+
+            // return h.file(__dirname + '/resumes/1550763603011/*.pdf');
+        }
+
+    })
 
 };
 

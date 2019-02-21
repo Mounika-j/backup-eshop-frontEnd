@@ -16,12 +16,13 @@ const schema = Joi.object({
     timeCreated: Joi.date().default(NewDate(), 'time of creation'),
     // userId: Joi.string().required(),
     jobListingId: Joi.string().required(),
+    resumeKey: Joi.string().required(),
 });
 
 
 class JobApplication extends MongoModels {
     static async create(fullName, email,
-        contact, currentLocation, willingToRelocate, visaStatus, jobListingId) {
+        contact, currentLocation, willingToRelocate, visaStatus, jobListingId, resumeKey) {
 
         Assert.ok(fullName, 'Missing fullname argument');
         Assert.ok(email, 'Missing email argument');
@@ -30,7 +31,7 @@ class JobApplication extends MongoModels {
         Assert.ok(willingToRelocate, 'Missing relocation argument');
         Assert.ok(visaStatus, 'Missing visa argument');
         Assert.ok(jobListingId, 'Missing job listing argument');
-
+        Assert.ok(resumeKey, 'Missing resume key argument');
 
         const document = new this({
             fullName: fullName,
@@ -39,10 +40,10 @@ class JobApplication extends MongoModels {
             currentLocation: currentLocation,
             willingToRelocate: willingToRelocate,
             visaStatus: visaStatus,
-            jobListingId: jobListingId
+            jobListingId: jobListingId,
+            resumeKey: resumeKey
         });
 
-        console.log(document);
         
         const jobapplications = await this.insertOne(document);
         return jobapplications[0];
