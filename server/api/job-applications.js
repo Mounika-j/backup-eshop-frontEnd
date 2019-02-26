@@ -15,7 +15,9 @@ const register = function (server, serverOptions) {
             tags: ['api','job-applications'],
             description: 'Get a paginated list of all job applications. [Admin Scope]',
             notes: 'Get a paginated list of all job applications.',
-            auth: false,
+            auth: { 
+                scope: 'account'
+             },
             validate: {
                 query: {
                     sort: Joi.string().default('_id'),
@@ -45,7 +47,9 @@ const register = function (server, serverOptions) {
             tags: ['api','job-applications'],
             description: 'Create a new job application. [Admin Scope]',
             notes: 'Create a new job application.',
-            auth: false,
+            auth: { 
+                scope: 'account'
+            },
             validate: {
                 payload: {
                     fullName: Joi.string().required(),
@@ -69,8 +73,9 @@ const register = function (server, serverOptions) {
             const visaStatus = request.payload.visaStatus;
             const jobListingId = request.payload.jobListingId;
             const resumeKey = request.payload.resumeKey;
+            const userId = request.auth.credentials.roles.account._id;
 
-            return await JobApplication.create(fullName, email, contact, currentLocation, willingToRelocate, visaStatus, jobListingId, resumeKey);
+            return await JobApplication.create(fullName, email, contact, currentLocation, willingToRelocate, visaStatus, jobListingId, resumeKey, userId);
         }
     });
 
@@ -87,12 +92,14 @@ const register = function (server, serverOptions) {
                     id : Joi.string().required().description('the id to get the job-application')
                 }
             },
-            auth: false
+            auth: { 
+                scope: 'account'
+            },
         },
         handler: async function (request, h) {
-
+            
             const jobapplication = await JobApplication.findById(request.params.id);
-
+            
             if (!jobapplication) {
                 throw Boom.notFound('Jobapplication not found.');
             }
@@ -109,7 +116,9 @@ const register = function (server, serverOptions) {
             tags: ['api','job-applications'],
             description: 'Update a job-application by ID. [Admin Scope]',
             notes: 'Update a job-application by ID.',
-            auth: false,
+            auth: { 
+                scope: 'account'
+            },
             validate: {
                 payload: {
                     fullName: Joi.string().required(),
@@ -117,7 +126,8 @@ const register = function (server, serverOptions) {
                     contact: Joi.string().required(),
                     currentLocation: Joi.string().required(),
                     willingToRelocate: Joi.string().required(),
-                    visaStatus: Joi.string().required()
+                    visaStatus: Joi.string().required(),
+                    resumeKey: Joi.string().required()
                 },
                 params: {
                     id : Joi.string().required().description('the id to update the job-application')
@@ -161,7 +171,9 @@ const register = function (server, serverOptions) {
                     id : Joi.string().required().description('the id to delete the job-application')
                 }
             },
-            auth: false,
+            auth: { 
+                scope: 'account'
+            },
             // pre: [
             //     // Preware.requireAdminGroup('root')
             // ]
@@ -188,7 +200,9 @@ const register = function (server, serverOptions) {
                 allow: 'multipart/form-data',
                 maxBytes: 2 * 1024 * 1024
             },
-            auth: false
+            auth: { 
+                scope: 'account'
+            },
         },
         handler: async function (request, h) {
             var identifier = + new Date();
@@ -217,7 +231,9 @@ const register = function (server, serverOptions) {
                     id: Joi.string().required().description('the id of the job-application to get resume')
                 }
             },
-            auth: false
+            auth: { 
+                scope: 'account'
+            },
         }, 
         handler: async function (request, h) {
             // console.log(request.params.id);

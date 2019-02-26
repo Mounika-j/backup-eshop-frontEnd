@@ -12,13 +12,13 @@ const schema = Joi.object({
     location: Joi.string().required(),
     description: Joi.string().required(),
     timeCreated: Joi.date().default(NewDate(), 'time of creation'),
-    userId: Joi.string().optional(),
+    userId: Joi.string().required(),
     experience: Joi.number().required()
 });
 
 
 class JobListing extends MongoModels {
-    static async create(jobTitle, location, description, experience) {
+    static async create(jobTitle, location, description, experience, userId) {
 
         Assert.ok(jobTitle, 'Missing jobtitle argument.');
         Assert.ok(location, 'Missing location argument.');
@@ -30,7 +30,8 @@ class JobListing extends MongoModels {
             jobTitle: jobTitle,
             location: location,
             description: description,
-            experience: experience
+            experience: experience,
+            userId: `${userId}`
         });
 
         const joblistings = await this.insertOne(document);

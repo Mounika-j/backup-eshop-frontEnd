@@ -14,7 +14,7 @@ const schema = Joi.object({
     willingToRelocate: Joi.boolean().required(),
     visaStatus: Joi.string().required(),
     timeCreated: Joi.date().default(NewDate(), 'time of creation'),
-    // userId: Joi.string().required(),
+    userId: Joi.string().required(),
     jobListingId: Joi.string().required(),
     resumeKey: Joi.string().required(),
 });
@@ -22,7 +22,7 @@ const schema = Joi.object({
 
 class JobApplication extends MongoModels {
     static async create(fullName, email,
-        contact, currentLocation, willingToRelocate, visaStatus, jobListingId, resumeKey) {
+        contact, currentLocation, willingToRelocate, visaStatus, jobListingId, resumeKey, userId) {
 
         Assert.ok(fullName, 'Missing fullname argument');
         Assert.ok(email, 'Missing email argument');
@@ -41,7 +41,8 @@ class JobApplication extends MongoModels {
             willingToRelocate: willingToRelocate,
             visaStatus: visaStatus,
             jobListingId: jobListingId,
-            resumeKey: resumeKey
+            resumeKey: resumeKey,
+            userId: `${userId}`
         });
 
         
@@ -52,11 +53,12 @@ class JobApplication extends MongoModels {
 }
 
 
-JobApplication.collectionName = 'job-applications';
+JobApplication.collectionName = 'jobApplications';
 JobApplication.schema = schema;
 JobApplication.indexes = [
-    { key: { userId: 1 } }
-];
+    { key: { userId: 1 } },
+    { key: { jobListingId: 1 } } 
+]
 
 
 module.exports = JobApplication;

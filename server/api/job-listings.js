@@ -15,7 +15,12 @@ const register = function (server, serverOptions) {
             tags: ['api','job-listings'],
             description: 'Get a paginated list of all job listings. [Admin Scope]',
             notes: 'Get a paginated list of all job listings.',
-            auth: false,
+            auth: { 
+                scope: 'admin'
+            },
+            pre: [
+                Preware.requireAdminGroup('root')
+            ],
             validate: {
                 query: {
                     sort: Joi.string().default('_id'),
@@ -45,25 +50,30 @@ const register = function (server, serverOptions) {
             tags: ['api','job-listings'],
             description: 'Create a new job listing. [Admin Scope]',
             notes: 'Create a new job listing.',
-            auth: false,
+            auth: {
+                scope: 'admin'
+            },
+            pre: [
+                Preware.requireAdminGroup('root')
+            ],
             validate: {
                 payload: {
                     jobTitle: Joi.string().required(),
                     location: Joi.string().required(),
                     description: Joi.string().required(),
-                    experience: Joi.number()
+                    experience: Joi.number().required()
                 }
             }
         },
         handler: async function (request, h) {
-            // console.log(request);
             
             const jobTitle = request.payload.jobTitle;
             const location = request.payload.location;
             const description = request.payload.description;
             const experience = request.payload.experience;
+            const userId = request.auth.credentials.roles.account._id;
             
-            return await JobListing.create(jobTitle, location, description, experience);
+            return await JobListing.create(jobTitle, location, description, experience, userId);
         }
     });
 
@@ -80,7 +90,12 @@ const register = function (server, serverOptions) {
                     id : Joi.string().required().description('the id to get the joblisting')
                 }
             },
-            auth: false
+            auth: {
+                scope: 'admin'
+            },
+            pre: [
+                Preware.requireAdminGroup('root')
+            ],
         },
         handler: async function (request, h) {
 
@@ -102,7 +117,12 @@ const register = function (server, serverOptions) {
             tags: ['api','job-listings'],
             description: 'Update a job-listing by ID. [Admin Scope]',
             notes: 'Update a job-listing by ID.',
-            auth: false,
+            auth: {
+                scope: 'admin'
+            },
+            pre: [
+                Preware.requireAdminGroup('root')
+            ],
             validate: {
                 payload: {
                     jobTitle: Joi.string().required(),
@@ -122,7 +142,8 @@ const register = function (server, serverOptions) {
                 $set: {
                     jobTitle: request.payload.jobTitle,
                     location: request.payload.location,
-                    description: request.payload.description
+                    description: request.payload.description,
+                    experience: request.payload.experience
                 }
             };
             
@@ -149,10 +170,12 @@ const register = function (server, serverOptions) {
                     id : Joi.string().required().description('the id to delete the job-listing')
                 }
             },
-            auth: false,
-            // pre: [
-            //     // Preware.requireAdminGroup('root')
-            // ]
+            auth: {
+                scope: 'admin'
+            },
+            pre: [
+                Preware.requireAdminGroup('root')
+            ]
         },
         handler: async function (request, h) {
 
