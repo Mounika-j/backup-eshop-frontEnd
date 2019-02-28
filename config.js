@@ -47,7 +47,7 @@ const config = {
     nodemailer: {
         host: 'smtpout.secureserver.net',
         port: 80,
-        secure: true,
+        secure: false,
         auth: {
             user: 'app@enshire.com',
             pass: process.env.SMTP_PASSWORD
