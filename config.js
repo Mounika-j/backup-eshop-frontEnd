@@ -45,22 +45,22 @@ const config = {
         autoIndex: true
     },
     nodemailer: {
-        host: 'smtp.gmail.com',
-        port: 465,
+        host: 'smtpout.secureserver.net',
+        port: 80,
         secure: true,
         auth: {
-            user: 'jedireza@gmail.com',
+            user: 'app@enshire.com',
             pass: process.env.SMTP_PASSWORD
         }
     },
     system: {
         fromAddress: {
-            name: 'Frame',
-            address: 'jedireza@gmail.com'
+            name: 'Enshire',
+            address: 'app@enshire.com'
         },
         toAddress: {
-            name: 'Frame',
-            address: 'jedireza@gmail.com'
+            name: 'Enshire',
+            address: 'app@enshire.com'
         }
     }
 };
