@@ -15,12 +15,7 @@ const register = function (server, serverOptions) {
             tags: ['api','job-listings'],
             description: 'Get a paginated list of all job listings. [Admin Scope]',
             notes: 'Get a paginated list of all job listings.',
-            auth: { 
-                scope: 'admin'
-            },
-            pre: [
-                Preware.requireAdminGroup('root')
-            ],
+            auth: false,
             validate: {
                 query: {
                     sort: Joi.string().default('_id'),
@@ -90,12 +85,7 @@ const register = function (server, serverOptions) {
                     id : Joi.string().required().description('the id to get the joblisting')
                 }
             },
-            auth: {
-                scope: 'admin'
-            },
-            pre: [
-                Preware.requireAdminGroup('root')
-            ],
+            auth: false
         },
         handler: async function (request, h) {
 
