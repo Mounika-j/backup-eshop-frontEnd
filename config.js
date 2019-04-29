@@ -38,7 +38,7 @@ const config = {
                     $filter: 'env',
                     production: process.env.MONGODB_DB_NAME,
                     test: 'frame-test',
-                    $default: 'frame'
+                    $default: 'enshire'
                 }
             }
         },
