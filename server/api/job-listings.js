@@ -60,13 +60,13 @@ const register = function (server, serverOptions) {
                 }
             }
         },
-        handler: async function (request, h) {
+        handler: async function (request, h) {            
             
             const jobTitle = request.payload.jobTitle;
             const location = request.payload.location;
             const description = request.payload.description;
             const experience = request.payload.experience;
-            const userId = request.auth.credentials.roles.account._id;
+            const userId = request.auth.credentials.roles.admin._id;
             
             return await JobListing.create(jobTitle, location, description, experience, userId);
         }
