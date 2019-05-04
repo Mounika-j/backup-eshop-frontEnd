@@ -311,8 +311,7 @@ const register = function (server, serverOptions) {
 
             const id = request.auth.credentials.user._id;
             const fields = User.fieldsAdapter('username email roles');
-
-            return await User.findById(id, fields);
+            return await User.findById(id, {projection: fields});
         }
     });
 
