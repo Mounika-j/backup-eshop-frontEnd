@@ -68,7 +68,7 @@ const register = function (server, serverOptions) {
             const experience = request.payload.experience;
             const userId = request.auth.credentials.roles.admin._id;
             
-            return await JobListing.create(jobTitle, location, description, experience, userId);
+            return await JobListing.create(jobTitle, location, description, experience, userId, false);
         }
     });
 
@@ -118,7 +118,8 @@ const register = function (server, serverOptions) {
                     jobTitle: Joi.string().required(),
                     location: Joi.string().required(),
                     description: Joi.string().required(),
-                    experience: Joi.number().required()
+                    experience: Joi.number().required(),
+                    isClosed: Joi.boolean()
                 },
                 params: {
                     id : Joi.string().required().description('the id to update the job-listing')
@@ -133,7 +134,8 @@ const register = function (server, serverOptions) {
                     jobTitle: request.payload.jobTitle,
                     location: request.payload.location,
                     description: request.payload.description,
-                    experience: request.payload.experience
+                    experience: request.payload.experience,
+                    isClosed: request.payload.isClosed || false
                 }
             };
             

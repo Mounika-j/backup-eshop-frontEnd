@@ -200,21 +200,22 @@ const register = function (server, serverOptions) {
                 allow: 'multipart/form-data',
                 maxBytes: 2 * 1024 * 1024
             },
-            auth: { 
-                scope: 'account'
-            },
+            // auth: {
+            //     scope: 'account'
+            // },
         },
         handler: async function (request, h) {
             var identifier = + new Date();
             var filepath = __dirname +'/resumes/' + identifier + '/';
             fs.mkdirSync(filepath, { recursive: true });
-            request.payload.resume.pipe(fs.createWriteStream(
-                 filepath + request.payload.resume.hapi.filename,
+            console.log(request.payload.file.pipe);
+            request.payload.file.pipe(fs.createWriteStream(
+                 filepath + request.payload.file.hapi.filename,
                 {
                     flags: 'a'
                 }
             )); 
-            return { file: request.payload.resume.hapi.filename,
+            return { file: request.payload.file.hapi.filename,
                      key: identifier,
                      message: 'Success.' }
         }
