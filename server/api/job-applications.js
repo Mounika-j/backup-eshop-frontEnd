@@ -5,7 +5,7 @@ const Preware = require('../preware');
 const JobApplication = require('../models/job-application');
 const User = require('../models/user');
 const fs = require('fs');
-
+const S3 = require('../lib/aws').S3;
 const register = function (server, serverOptions) {
 
     server.route({
@@ -16,7 +16,7 @@ const register = function (server, serverOptions) {
             description: 'Get a paginated list of all job applications. [Admin Scope]',
             notes: 'Get a paginated list of all job applications.',
             auth: { 
-                scope: 'account'
+                scope: 'admin'
              },
             validate: {
                 query: {
@@ -47,9 +47,10 @@ const register = function (server, serverOptions) {
             tags: ['api','job-applications'],
             description: 'Create a new job application. [Admin Scope]',
             notes: 'Create a new job application.',
-            auth: { 
-                scope: 'account'
-            },
+            auth:false,
+            // auth: {
+            //     scope: 'account'
+            // },
             validate: {
                 payload: {
                     fullName: Joi.string().required(),
@@ -64,7 +65,7 @@ const register = function (server, serverOptions) {
             }
         },
         handler: async function (request, h) {
-            
+            console.log('request.auth.credentials:::::::',request.auth.credentials);
             const fullName = request.payload.fullName;
             const email = request.payload.email;
             const contact = request.payload.contact;
@@ -73,7 +74,7 @@ const register = function (server, serverOptions) {
             const visaStatus = request.payload.visaStatus;
             const jobListingId = request.payload.jobListingId;
             const resumeKey = request.payload.resumeKey;
-            const userId = request.auth.credentials.roles.account._id;
+            const userId = request.auth.credentials ? request.auth.credentials.roles.account._id : null ;
 
             return await JobApplication.create(fullName, email, contact, currentLocation, willingToRelocate, visaStatus, jobListingId, resumeKey, userId);
         }
@@ -200,25 +201,39 @@ const register = function (server, serverOptions) {
                 allow: 'multipart/form-data',
                 maxBytes: 2 * 1024 * 1024
             },
-            // auth: {
-            //     scope: 'account'
-            // },
+            auth: false
         },
         handler: async function (request, h) {
-            var identifier = + new Date();
+            var identifier = + Date.now()
             var filepath = __dirname +'/resumes/' + identifier + '/';
             fs.mkdirSync(filepath, { recursive: true });
-            console.log(request.payload.file.pipe);
-            request.payload.file.pipe(fs.createWriteStream(
-                 filepath + request.payload.file.hapi.filename,
-                {
-                    flags: 'a'
-                }
-            )); 
+
+            var result = await  S3.putObject({
+                Bucket:'app.enshire.com',
+                Key: identifier,
+                Body: request.payload.file._data
+            });
+            console.log('Request:::::::');
+            console.log(request.payload.file);
             return { file: request.payload.file.hapi.filename,
-                     key: identifier,
-                     message: 'Success.' }
-        }
+                         key: identifier,
+                         url: 'https://s3.us-east-2.amazonaws.com/app.enshire.com/'+identifier,
+                         message: 'Success.' }
+            }
+
+
+            // request.payload.file.pipe(fs.createWriteStream(
+            //      filepath + request.payload.file.hapi.filename,
+            //     {
+            //         flags: 'a'
+            //     }
+            // ));
+
+
+            // return { file: request.payload.file.hapi.filename,
+            //          key: identifier,
+            //          url: 'https://s3.us-east-2.amazonaws.com/app.enshire.com/'+identifier,
+            //          message: 'Success.' }
 
     });
 
