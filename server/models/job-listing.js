@@ -39,6 +39,13 @@ class JobListing extends MongoModels {
         const joblistings = await this.insertOne(document);
         return joblistings[0];
     }
+
+    static async getOpenJobLocations(){
+        const locations = await this.distinct('location',{
+            isClosed:false
+        },{_id:-1,location:1})
+        return locations;
+    }
 }
 
 

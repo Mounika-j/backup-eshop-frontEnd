@@ -20,13 +20,27 @@ const register = function (server, serverOptions) {
                 query: {
                     sort: Joi.string().default('_id'),
                     limit: Joi.number().default(20),
-                    page: Joi.number().default(1)
+                    page: Joi.number().default(1),
+                    filter: Joi.alternatives().try(Joi.boolean(), Joi.object())
                 }
             }
         },
         handler: async function (request, h) {
 
             const query = {};
+
+            if(request.query.filter){
+
+                const filter = request.query.filter;
+                console.log('locations::::,',filter);
+                if(filter.minimumExperience){
+                    query.experience = {$lte:filter.minimumExperience}
+                }
+
+                if(filter.locations){
+                    query.location = {$in:filter.locations}
+                }
+            }
             const limit = request.query.limit;
             const page = request.query.page;
             const options = {
@@ -180,6 +194,23 @@ const register = function (server, serverOptions) {
             return { message: 'Success.' };
         }
     });
+
+
+    server.route({
+        method: 'GET',
+        path: '/api/job-listings/locations',
+        options:{
+            tags: ['api', 'job-listings', 'locations'],
+            description: 'Returns list of locations where job available',
+            validate:{
+            },
+            auth:false
+        },
+        handler: async function(request, h) {
+            const locations = await JobListing.getOpenJobLocations();
+            return locations;
+        }
+    })
 
 };
 
