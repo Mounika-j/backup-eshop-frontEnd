@@ -3,6 +3,7 @@ const Assert = require('assert');
 const Joi = require('joi');
 const MongoModels = require('mongo-models');
 const NewDate = require('joistick/new-date');
+const moment = require('moment');
 
 
 const schema = Joi.object({
@@ -17,6 +18,8 @@ const schema = Joi.object({
     userId: Joi.string().required(),
     jobListingId: Joi.string().required(),
     resumeKey: Joi.string().required(),
+    isRejected: Joi.boolean(),
+    currentStatus: Joi.array()
 });
 
 
@@ -42,13 +45,29 @@ class JobApplication extends MongoModels {
             visaStatus: visaStatus,
             jobListingId: jobListingId,
             resumeKey: resumeKey,
-            userId: `${userId}`
+            userId: `${userId}`,
+            isRejected: false
         });
 
         
         const jobapplications = await this.insertOne(document);
         return jobapplications[0];
 
+    }
+
+    static async getListByJobId(jobListingId){
+        const applicants = await this.find({
+            jobListingId: jobListingId
+        });
+        return applicants;
+    }
+
+    static async updateTheStatus(status, id){
+        const success = await this.findByIdAndUpdate({_id:id},{$set:{$push:{
+                status: status,
+                    time: moment().utc()
+                }}});
+        return success;
     }
 }
 

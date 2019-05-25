@@ -260,7 +260,54 @@ const register = function (server, serverOptions) {
 
     })
 
+    server.route({
+        method:'GET',
+        path:'/api/{jobId}/job-applications',
+        options:{
+            auth:{
+                scope:'admin'
+            },
+            validate:{
+                params: {
+                    jobId: Joi.string()
+                }
+            }
+        },
+        handler: async function(request, h){
+            const jobListingId = request.params.jobId;
+            console.log('Before going to handler::::');
+            const applicants = await JobApplication.getListByJobId(jobListingId);
+            console.log('After getting applications::::');
+            return applicants;
+        }
+
+    })
+
+    server.route({
+        method:'PUT',
+        path:'/api/{id}/status',
+        options:{
+            auth:{
+                scope:'admin'
+            },
+            validate:{
+                params:{
+                    id: Joi.string().required()
+                }
+            }
+        },
+        handler: async function(request, h){
+            const id = req.params.id;
+            const status = req.body.status;
+            const  succcess = await JobApplication.updateTheStatus(id, status);
+            return succcess;
+        }
+    })
+
 };
+
+
+
 
 
 module.exports = {

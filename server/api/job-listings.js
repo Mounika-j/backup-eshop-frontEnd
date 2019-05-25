@@ -212,6 +212,29 @@ const register = function (server, serverOptions) {
         }
     })
 
+    server.route({
+        method:'GET',
+        path:'/api/job-listings/job-titles',
+        options:{
+            auth:false
+        },
+        handler: async function(request, h){
+            const jobTitles = await JobListing.find({isClosed:false},{
+                projection:{
+                    _id:-1,
+                    jobId:1,
+                    jobTitle:1,
+                    location:-1,
+                    description:-1,
+                    userId:-1,
+                    experience: -1
+                }
+
+            });
+            return jobTitles;
+        }
+    })
+
 };
 
 

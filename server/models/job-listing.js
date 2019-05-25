@@ -46,6 +46,12 @@ class JobListing extends MongoModels {
         },{_id:-1,location:1})
         return locations;
     }
+
+    static async getOpenJobTitles(){
+        const jobTitles = await this.find({
+            isClosed: false
+        });
+    }
 }
 
 
