@@ -1,0 +1,22 @@
+{
+    "apps":[{
+        "name":"enshire-backend-staging",
+        "script":"server.js",
+        "env_staging":{
+            "NODE_ENV":"staging"
+        }
+    }],
+    "deploy":{
+        "staging":{
+            "user":"ubuntu",
+            "host":"ec2-18-221-234-243.us-east-2.compute.amazonaws.com",
+            "ref":"origin/master",
+            "origin":"git@bitbucket.org:EnshireInc/enshire-backend.git",
+            "ssh_options": "StrictHostKeyChecking=no",
+            "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json --env production",
+            "env"  : {
+                "NODE_ENV": "staging"
+              }
+        }
+    }
+}
