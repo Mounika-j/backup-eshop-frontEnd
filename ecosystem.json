@@ -16,7 +16,7 @@
             "path":"/home/ubuntu/enshire-backend",
             "ssh_options": "StrictHostKeyChecking=no",
             "key":"~/Documents/enshire-back-end/enshire-dev.pem",
-            "post-deploy" : "nmv use 10.15 && npm install && pm2 startOrRestart ecosystem.json --env staging",
+            "post-deploy" : "nvm use 10.15 && npm install && pm2 startOrRestart ecosystem.json --env staging",
             "env"  : {
                 "NODE_ENV": "staging"
               }
