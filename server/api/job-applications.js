@@ -206,18 +206,26 @@ const register = function (server, serverOptions) {
         handler: async function (request, h) {
             var identifier = + Date.now()
             var filepath = __dirname +'/resumes/' + identifier + '/';
-            fs.mkdirSync(filepath, { recursive: true });
-
-            var result = await  S3.putObject({
-                Bucket:'app.enshire.com',
-                Key: identifier,
+            console.log(request.payload.file._data)
+            //fs.mkdirSync(filepath, { recursive: true });
+            var result = S3.putObject({
+                Bucket:'enshire',
+                Key: identifier.toString(),
                 Body: request.payload.file._data
-            });
-            console.log('Request:::::::');
-            console.log(request.payload.file);
+            }, (err, result) => {
+                if(err){
+                    console.log('ERROR::::')
+                    console.log(err)
+                }else{
+                    console.log(result)
+                }
+            })
+
+            console.log(result.status);
+            
             return { file: request.payload.file.hapi.filename,
                          key: identifier,
-                         url: 'https://s3.us-east-2.amazonaws.com/app.enshire.com/'+identifier,
+                         url: 'https://s3.us-east-2.amazonaws.com/enshire/'+identifier,
                          message: 'Success.' }
             }
 
