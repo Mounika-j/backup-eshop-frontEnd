@@ -11,7 +11,7 @@
             "user":"ubuntu",
             "host":"ec2-52-14-183-115.us-east-2.compute.amazonaws.com",
             "ref":"origin/master",
-            "pre-deploy": "git pull",
+            "pre-deploy": "git pull master",
             "repo":"git@bitbucket.org:EnshireInc/enshire-backend.git",
             "origin":"https://EnshireInc@bitbucket.org/EnshireInc/enshire-backend.git",
             "path":"/home/ubuntu/enshire-backend",
