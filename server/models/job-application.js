@@ -62,6 +62,13 @@ class JobApplication extends MongoModels {
         return applicants;
     }
 
+    static async getListByUserid(userId) {        
+        let jobs = await this.find({
+            userId: userId.toString()
+        });
+        
+        return jobs;
+    }
     static async updateTheStatus(status, id){
         const success = await this.findByIdAndUpdate({_id:id},{$set:{$push:{
                 status: status,

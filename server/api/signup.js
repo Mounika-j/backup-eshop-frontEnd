@@ -61,7 +61,8 @@ const register = function (server, serverOptions) {
                 User.create(
                     request.payload.username,
                     request.payload.password,
-                    request.payload.email
+                    request.payload.email,
+                    request.payload.name
                 )
             ]);
 

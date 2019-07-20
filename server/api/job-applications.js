@@ -46,11 +46,11 @@ const register = function (server, serverOptions) {
         options: {
             tags: ['api','job-applications'],
             description: 'Create a new job application. [Admin Scope]',
-            notes: 'Create a new job application.',
-            auth:false,
-            // auth: {
-            //     scope: 'account'
-            // },
+            notes: 'Create a new job application.',            
+            auth: {
+                scope: ['account'],
+                mode: 'optional'
+            },
             validate: {
                 payload: {
                     fullName: Joi.string().required(),
@@ -64,8 +64,7 @@ const register = function (server, serverOptions) {
                 }
             }
         },
-        handler: async function (request, h) {
-            console.log('request.auth.credentials:::::::',request.auth.credentials);
+        handler: async function (request, h) {            
             const fullName = request.payload.fullName;
             const email = request.payload.email;
             const contact = request.payload.contact;
@@ -74,7 +73,7 @@ const register = function (server, serverOptions) {
             const visaStatus = request.payload.visaStatus;
             const jobListingId = request.payload.jobListingId;
             const resumeKey = request.payload.resumeKey;
-            const userId = request.auth.credentials ? request.auth.credentials.roles.account._id : null ;
+            const userId = request.auth.credentials ? request.auth.credentials.user._id : null ;
 
             return await JobApplication.create(fullName, email, contact, currentLocation, willingToRelocate, visaStatus, jobListingId, resumeKey, userId);
         }
@@ -205,12 +204,12 @@ const register = function (server, serverOptions) {
         },
         handler: async function (request, h) {
             var identifier = + Date.now()
-            var filepath = __dirname +'/resumes/' + identifier + '/';
-            console.log(request.payload.file._data)
+            var filepath = __dirname +'/resumes/' + identifier + '/';            
+            identifier += request.payload.file.hapi.filename;
             //fs.mkdirSync(filepath, { recursive: true });
             var result = S3.putObject({
                 Bucket:'enshire',
-                Key: identifier.toString(),
+                Key: identifier,
                 Body: request.payload.file._data
             }, (err, result) => {
                 if(err){

@@ -17,6 +17,11 @@ const schema = Joi.object({
         token: Joi.string().required(),
         expires: Joi.date().required()
     }),
+    phone: Joi.strict().allow(null,''),
+    location: Joi.string().allow(null, ''),
+    canReLocate: Joi.string().allow('yes', 'no'),
+    visaStatus: Joi.string().allow('OPT','H1B','Green Card','Us citizen',''),
+    name: Joi.string().required(),
     roles: Joi.object({
         admin: Joi.object({
             id: Joi.string().required(),
@@ -27,24 +32,32 @@ const schema = Joi.object({
             name: Joi.string().required()
         })
     }).default(),
+    resume: Joi.object().allow('',null),
     timeCreated: Joi.date().default(NewDate(), 'time of creation'),
     username: Joi.string().token().lowercase().required()
 });
 
 
 class User extends MongoModels {
-    static async create(username, password, email) {
+    static async create(username, password, email, name) {
 
         Assert.ok(username, 'Missing username argument.');
         Assert.ok(password, 'Missing password argument.');
         Assert.ok(email, 'Missing email argument.');
+        Assert.ok(name, 'Missing name argument')
 
         const passwordHash = await this.generatePasswordHash(password);
         const document = new this({
             email,
             isActive: true,
             password: passwordHash.hash,
-            username
+            username,
+            name,
+            phone:'',
+            location:'',
+            canReLocate:'no',
+            visaStatus:'OPT',
+            resume:''
         });
         const users = await this.insertOne(document);
 
@@ -109,7 +122,7 @@ class User extends MongoModels {
     }
 
     constructor(attrs) {
-
+        console.log(attrs)
         super(attrs);
 
         Object.defineProperty(this, '_roles', {

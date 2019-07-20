@@ -4,6 +4,9 @@ const Joi = require('joi');
 const Preware = require('../preware');
 const JobListing = require('../models/job-listing');
 const User = require('../models/user');
+const async = require('async');
+const jobApplications = require('../models/job-application');
+const _ = require('underscore');
 
 
 const register = function (server, serverOptions) {
@@ -15,7 +18,10 @@ const register = function (server, serverOptions) {
             tags: ['api','job-listings'],
             description: 'Get a paginated list of all job listings. [Admin Scope]',
             notes: 'Get a paginated list of all job listings.',
-            auth: false,
+            auth: {
+                scope: ['account'],
+                mode: 'optional'
+            },
             validate: {
                 query: {
                     sort: Joi.string().default('_id'),
@@ -28,11 +34,10 @@ const register = function (server, serverOptions) {
         handler: async function (request, h) {
 
             const query = {};
-
+            let userJobs = []      
             if(request.query.filter){
 
-                const filter = request.query.filter;
-                console.log('locations::::,',filter);
+                const filter = request.query.filter;                
                 if(filter.minimumExperience){
                     query.experience = {$lte:filter.minimumExperience}
                 }
@@ -46,8 +51,25 @@ const register = function (server, serverOptions) {
             const options = {
                 sort: JobListing.sortAdapter(request.query.sort)
             };
+            let jobs = await JobListing.pagedFind(query, page, limit, options);
 
-            return await JobListing.pagedFind(query, page, limit, options);
+            if(request.auth.credentials && request.auth.credentials.user){
+                userJobs = await jobApplications.getListByUserid(request.auth.credentials.user._id);
+            }
+            
+            if(userJobs && userJobs.length){
+
+                userJobs = _.pluck(userJobs,'jobListingId');                
+            }
+            
+            jobs.data = jobs.data.map(ele => {
+                
+                if(userJobs.indexOf(ele.jobId) > -1){
+                    ele.isApplied = true                    
+                }
+                return ele;
+            })
+            return jobs;
         }
     });
 

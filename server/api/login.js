@@ -80,7 +80,14 @@ const register = function (server, serverOptions) {
                     _id: request.pre.user._id,
                     username: request.pre.user.username,
                     email: request.pre.user.email,
-                    roles: request.pre.user.roles
+                    roles: request.pre.user.roles,
+                    phone: request.pre.user.phone,
+                    visaStatus: request.pre.user.visaStatus,
+                    canReLocate: request.pre.user.canReLocate,
+                    location: request.pre.user.location,
+                    name:request.pre.user.name,
+                    resume: request.pre.user.resume
+
                 },
                 session: request.pre.session,
                 authHeader

@@ -58,7 +58,8 @@ const register = function (server, serverOptions) {
                 payload: {
                     username: Joi.string().token().lowercase().required(),
                     password: Joi.string().required(),
-                    email: Joi.string().email().lowercase().required()
+                    email: Joi.string().email().lowercase().required(),
+                    name: Joi.string().required().error(new Error('Full name is required to create user'))
                 }
             },
             pre: [
@@ -95,6 +96,7 @@ const register = function (server, serverOptions) {
             const username = request.payload.username;
             const password = request.payload.password;
             const email = request.payload.email;
+            const name = request.payload.name;
 
             return await User.create(username, password, email);
         }
@@ -141,48 +143,33 @@ const register = function (server, serverOptions) {
             description: 'Update a user by ID. [Root Scope]',
             notes: 'Update a user by ID.',
             auth: {
-                scope: 'admin'
+                scope: ['account','admin']
             },
             validate: {
                 params: {
                     id: Joi.string().invalid('000000000000000000000000')
                 },
                 payload: {
-                    isActive: Joi.boolean().required(),
-                    username: Joi.string().token().lowercase().required(),
-                    email: Joi.string().email().lowercase().required()
+                    name: Joi.string().required(),
+                    phone: Joi.string().allow('',null),
+                    location: Joi.string().allow('',null),
+                    visaStatus: Joi.string().allow('H1B','OPT','Green Card','US citizen'),
+                    canReLocate: Joi.string().allow('yes','no'),                    
+                    resume: Joi.object().allow('',null)
+
                 }
             },
-            pre: [
-                Preware.requireAdminGroup('root'),
+            pre: [                
                 {
                     assign: 'usernameCheck',
                     method: async function (request, h) {
-
-                        const conditions = {
-                            username: request.payload.username,
+                        const conditions = {                            
                             _id: { $ne: User._idClass(request.params.id) }
                         };
                         const user = await User.findOne(conditions);
 
-                        if (user) {
-                            throw Boom.conflict('Username already in use.');
-                        }
-
-                        return h.continue;
-                    }
-                }, {
-                    assign: 'emailCheck',
-                    method: async function (request, h) {
-
-                        const conditions = {
-                            email: request.payload.email,
-                            _id: { $ne: User._idClass(request.params.id) }
-                        };
-                        const user = await User.findOne(conditions);
-
-                        if (user) {
-                            throw Boom.conflict('Email already in use.');
+                        if (!user) {
+                            throw Boom.conflict('User not found');
                         }
 
                         return h.continue;
@@ -194,29 +181,34 @@ const register = function (server, serverOptions) {
 
             const updateUser = {
                 $set: {
-                    isActive: request.payload.isActive,
-                    username: request.payload.username,
-                    email: request.payload.email
+                    phone: request.payload.phone,
+                    visaStatus: request.payload.visaStatus,
+                    location: request.payload.location,
+                    canReLocate: request.payload.canReLocate,
+                    resume: request.payload.resume,
+                    name: request.payload.name              
                 }
             };
             const queryByUserId = {
                 'user.id': request.params.id
             };
-            const updateRole = {
-                $set: {
-                    'user.name': request.payload.username
-                }
-            };
-            const user = await User.findByIdAndUpdate(request.params.id, updateUser);
-
+            // const updateRole = {
+            //     $set: {
+            //         'user.name': request.payload.username
+            //     }
+            // };
+            console.log('After uploading ::::::');
+            console.log(updateUser);
+            const user = await User.findByIdAndUpdate(request.params.id,  updateUser);
+                        
             if (!user) {
                 throw Boom.notFound('User not found.');
             }
 
-            await Promise.all([
-                Account.findOneAndUpdate(queryByUserId, updateRole),
-                Admin.findOneAndUpdate(queryByUserId, updateRole)
-            ]);
+            // await Promise.all([
+            //     Account.findOneAndUpdate(queryByUserId, updateRole),
+            //     Admin.findOneAndUpdate(queryByUserId, updateRole)
+            // ]);
 
             return user;
         }
@@ -310,7 +302,7 @@ const register = function (server, serverOptions) {
         handler: async function (request, h) {
 
             const id = request.auth.credentials.user._id;
-            const fields = User.fieldsAdapter('username email roles');
+            const fields = User.fieldsAdapter('username email roles name phone visaStatus canReLocate resume location');
             return await User.findById(id, {projection: fields});
         }
     });
