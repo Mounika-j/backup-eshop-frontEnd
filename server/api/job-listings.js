@@ -19,7 +19,7 @@ const register = function (server, serverOptions) {
             description: 'Get a paginated list of all job listings. [Admin Scope]',
             notes: 'Get a paginated list of all job listings.',
             auth: {
-                scope: ['account'],
+                scope: ['account','admin'],
                 mode: 'optional'
             },
             validate: {
