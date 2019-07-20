@@ -3,3 +3,4 @@ test/artifacts/*
 .env
 .eslintrc.js
 server/api/resumes/*
+package-lock.json
