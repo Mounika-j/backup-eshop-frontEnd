@@ -23,13 +23,18 @@ const register = function (server, serverOptions) {
                     name: Joi.string().required(),
                     email: Joi.string().email().lowercase().required(),
                     username: Joi.string().token().lowercase().required(),
-                    password: Joi.string().required()
+                    password: Joi.string().required().error(new Error('Password is required'))
+                },
+                failAction:  (request, h, err) => {
+                    console.log('came to name:::::')
+                    console.log(err)
+                    return err
                 }
             },
             pre: [{
                 assign: 'usernameCheck',
                 method: async function (request, h) {
-
+                    console.log('In the user name check::::')
                     const user = await User.findByUsername(request.payload.username);
 
                     if (user) {
@@ -41,7 +46,7 @@ const register = function (server, serverOptions) {
             }, {
                 assign: 'emailCheck',
                 method: async function (request, h) {
-
+                    console.log('In the email check::::::')
                     const user = await User.findByEmail(request.payload.email);
 
                     if (user) {
@@ -55,7 +60,7 @@ const register = function (server, serverOptions) {
         handler: async function (request, h) {
 
             // create and link account and user documents
-
+            console.log('Came to handler:::::;')
             let [account, user] = await Promise.all([
                 Account.create(request.payload.name),
                 User.create(

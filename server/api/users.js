@@ -60,6 +60,12 @@ const register = function (server, serverOptions) {
                     password: Joi.string().required(),
                     email: Joi.string().email().lowercase().required(),
                     name: Joi.string().required().error(new Error('Full name is required to create user'))
+                },
+                failAction: async (request, err, h) => {
+                    console.log('err:::')
+                    console.log(err)
+                    console.log('request')
+                    console.log(h)
                 }
             },
             pre: [
