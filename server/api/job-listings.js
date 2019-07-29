@@ -46,6 +46,9 @@ const register = function (server, serverOptions) {
                     query.location = {$in:filter.locations}
                 }
             }
+            if(!request.auth.credentials || !request.auth.credentials.user) {
+                query.isClosed = false
+            }
             const limit = request.query.limit;
             const page = request.query.page;
             const options = {
