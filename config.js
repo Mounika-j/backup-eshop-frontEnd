@@ -12,7 +12,7 @@ const criteria = {
 
 const config = {
     $meta: 'This file configures the plot device.',
-    projectName: 'Frame',
+    projectName: 'Enshire',
     port: {
         web: {
             $filter: 'env',
