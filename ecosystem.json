@@ -21,6 +21,21 @@
             "env"  : {
                 "NODE_ENV": "staging"
               }
+        },
+        "production":{
+            "user":"ubuntu",
+            "host":"ec2-3-15-1-164.us-east-2.compute.amazonaws.com",
+            "ref":"origin/master",
+            "pre-deploy": "git checkout package-lock.json",
+            "repo":"git@bitbucket.org:EnshireInc/enshire-backend.git",
+            "origin":"https://EnshireInc@bitbucket.org/EnshireInc/enshire-backend.git",
+            "path":"/home/ubuntu/enshire-backend",
+            "ssh_options": "StrictHostKeyChecking=no",
+            "key":"~/Documents/enshire-back-end/enshire-dev.pem",
+            "post-deploy" : "source ~/.nvm/nvm.sh && nvm use 10.15 && npm install && pm2 startOrRestart ecosystem.json --env staging",
+            "env"  : {
+                "NODE_ENV": "production"
+              }
         }
     }
 }
