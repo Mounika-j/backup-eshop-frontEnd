@@ -38,6 +38,7 @@ const main = async function () {
 
     const rootEmail = await Promptly.prompt('Root user email:');
     const rootPassword = await Promptly.password('Root user password:');
+    const name = await Promptly.prompt('Root user name:');
 
     // clear tables
 
@@ -78,6 +79,7 @@ const main = async function () {
     await User.insertOne(new User({
         _id: User.ObjectId('000000000000000000000000'),
         email: rootEmail.toLowerCase(),
+        name: name,
         password: passwordHash.hash,
         roles: {
             admin: {
