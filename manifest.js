@@ -16,7 +16,8 @@ const manifest = {
             request: ['error']
         },
         routes: {
-            security: true            
+            security: true,
+            cors: true
         },
         port: Config.get('/port/web'),
     },
