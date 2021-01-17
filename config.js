@@ -21,10 +21,7 @@ const config = {
             $default: 9000
         }
     },
-    cors: {
-        origin: ['*'],
-        additionalHeaders: ['cache-control', 'x-requested-with']
-    },
+    cors: true,
     authAttempts: {
         forIp: 50,
         forIpAndUser: 7
