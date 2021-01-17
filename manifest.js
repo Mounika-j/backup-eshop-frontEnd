@@ -17,7 +17,10 @@ const manifest = {
         },
         routes: {
             security: true,
-            cors: true
+            cors: {
+                origin: ['*'],
+                additionalHeaders: ['cache-control', 'x-requested-with']
+            }
         },
         port: Config.get('/port/web'),
     },
