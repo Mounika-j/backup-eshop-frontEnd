@@ -1,205 +1,98 @@
-# Frame
+# Bluebits
 
-A user system API starter. Bring your own front-end.
+This project was generated using [Nx](https://nx.dev).
 
-[![Build Status](https://travis-ci.org/jedireza/frame.svg?branch=master)](https://travis-ci.org/jedireza/frame)
-[![Dependency Status](https://david-dm.org/jedireza/frame.svg?style=flat)](https://david-dm.org/jedireza/frame)
-[![devDependency Status](https://david-dm.org/jedireza/frame/dev-status.svg?style=flat)](https://david-dm.org/jedireza/frame#info=devDependencies)
+<p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
 
+🔎 **Nx is a set of Extensible Dev Tools for Monorepos.**
 
-## Features
+## Quick Start & Documentation
 
- - Login system with forgot password and reset password
- - Abusive login attempt detection
- - User roles for accounts and admins
- - Admins only notes and status history for accounts
- - Admin groups with shared permissions
- - Admin level permissions that override group permissions
+[Nx Documentation](https://nx.dev/angular)
 
+[10-minute video showing all Nx features](https://nx.dev/angular/getting-started/what-is-nx)
 
-## Technology
+[Interactive Tutorial](https://nx.dev/angular/tutorial/01-create-application)
 
-Frame is built with the [hapi](https://hapijs.com/) framework. We're
-using [MongoDB](http://www.mongodb.org/) as a data store.
+## Adding capabilities to your workspace
 
+Nx supports many plugins which add capabilities for developing different types of applications and different tools.
 
-## Bring your own front-end
+These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
 
-Frame is only a restful JSON API. If you'd like a ready made front-end,
-checkout [Aqua](https://github.com/jedireza/aqua). Or better yet, fork
-this repo and build one on top of Frame.
+Below are our core plugins:
 
+- [Angular](https://angular.io)
+  - `ng add @nrwl/angular`
+- [React](https://reactjs.org)
+  - `ng add @nrwl/react`
+- Web (no framework frontends)
+  - `ng add @nrwl/web`
+- [Nest](https://nestjs.com)
+  - `ng add @nrwl/nest`
+- [Express](https://expressjs.com)
+  - `ng add @nrwl/express`
+- [Node](https://nodejs.org)
+  - `ng add @nrwl/node`
 
-## Live demo
+There are also many [community plugins](https://nx.dev/nx-community) you could add.
 
-| url                                                                                                | username | password |
-|:-------------------------------------------------------------------------------------------------- |:-------- |:-------- |
-| [https://getframe.herokuapp.com/](https://getframe.herokuapp.com/)                                 | root     | root     |
-| [https://getframe.herokuapp.com/documentation](https://getframe.herokuapp.com/documentation)       |          |          |
+## Generate an application
 
-[Postman](http://www.getpostman.com/) is a great tool for testing and
-developing APIs. See the wiki for details on [how to
-login](https://github.com/jedireza/frame/wiki/How-to-login).
+Run `ng g @nrwl/angular:app my-app` to generate an application.
 
+> You can use any of the plugins above to generate applications as well.
 
-## Requirements
+When using Nx, you can create multiple applications and libraries in the same workspace.
 
-You need [Node.js](http://nodejs.org/download/) `>=8.x` and you'll need a
-[MongoDB](http://www.mongodb.org/downloads) `>=2.6` server running.
+## Generate a library
 
+Run `ng g @nrwl/angular:lib my-lib` to generate a library.
 
-## Installation
+> You can also use any of the plugins above to generate libraries as well.
 
-```bash
-$ git clone https://github.com/jedireza/frame.git
-$ cd frame
-$ npm install
-```
+Libraries are sharable across libraries and applications. They can be imported from `@bluebits/mylib`.
 
+## Development server
 
-## Configuration
+Run `ng serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
 
-Simply edit `config.js`. The configuration uses
-[`confidence`](https://github.com/hapijs/confidence) which makes it easy to
-manage configuration settings across environments. __Don't store secrets in
-this file or commit them to your repository.__
+## Code scaffolding
 
-__Instead, access secrets via environment variables.__ We use
-[`dotenv`](https://github.com/motdotla/dotenv) to help make setting local
-environment variables easy (not to be used in production).
+Run `ng g component my-component --project=my-app` to generate a new component.
 
-Simply copy `.env-sample` to `.env` and edit as needed. __Don't commit `.env`
-to your repository.__
+## Build
 
+Run `ng build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## First time setup
+## Running unit tests
 
-__WARNING__: This will clear all data in the following MongoDB collections if
-they exist: `accounts`, `adminGroups`, `admins`, `authAttempts`, `sessions`,
-`statuses`, and `users`.
+Run `ng test my-app` to execute the unit tests via [Jest](https://jestjs.io).
 
-```bash
-$ npm run first-time-setup
+Run `nx affected:test` to execute the unit tests affected by a change.
 
-# > frame@0.0.0 first-time-setup /home/jedireza/projects/frame
-# > node first-time-setup.js
+## Running end-to-end tests
 
-# MongoDB URL: (mongodb://localhost:27017/frame)
-# Root user email: jedireza@gmail.com
-# Root user password:
-# Setup complete.
-```
+Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
 
+Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
 
-## Running the app
+## Understand your workspace
 
-```bash
-$ npm start
+Run `nx dep-graph` to see a diagram of the dependencies of your projects.
 
-# > frame@0.0.0 start /home/jedireza/projects/frame
-# > ./node_modules/nodemon/bin/nodemon.js -e js,md server
+## Further help
 
-# 09 Sep 03:47:15 - [nodemon] v1.10.2
-# ...
-```
+Visit the [Nx Documentation](https://nx.dev/angular) to learn more.
 
-Now you should be able to point your browser to http://127.0.0.1:9000/ and
-see the welcome message.
+## ☁ Nx Cloud
 
-[`nodemon`](https://github.com/remy/nodemon) watches for changes in server
-code and restarts the app automatically.
+### Computation Memoization in the Cloud
 
-### With the debugger
+<p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
 
-```bash
-$ npm run inspect
+Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
 
-# > frame@0.0.0 inspect /home/jedireza/projects/frame
-# > nodemon --inspect -e js,md server.js
+Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
 
-# [nodemon] 1.14.12
-# [nodemon] to restart at any time, enter `rs`
-# [nodemon] watching: *.*
-# [nodemon] starting `node --inspect server.js`
-# Debugger listening on ws://127.0.0.1:9229/3d706d9a-b3e0-4fc6-b64e-e7968b7f94d0
-# For help see https://nodejs.org/en/docs/inspector
-# 180203/193534.071, [log,info,mongodb] data: HapiMongoModels: successfully connected to the db.
-# 180203/193534.127, [log,info,mongodb] data: HapiMongoModels: finished processing auto indexes.
-# Server started on port 9000
-```
-
-Once started with the debuger you can open Google Chrome and go to
-[chrome://inspect](chrome://inspect). See https://nodejs.org/en/docs/inspector/
-for more details.
-
-
-## Running in production
-
-```bash
-$ node server.js
-```
-
-Unlike `$ npm start` this doesn't watch for file changes. Also be sure to set
-these environment variables in your production environment:
-
- - `NODE_ENV=production` - This is important for many different
-   optimizations.
- - `NPM_CONFIG_PRODUCTION=false` - This tells `$ npm install` to not skip
-   installing `devDependencies`, which we may need to run the first time
-   setup script.
-
-
-## Have a question?
-
-Any issues or questions (no matter how basic), open an issue. Please take the
-initiative to read relevant documentation and be pro-active with debugging.
-
-
-## Want to contribute?
-
-Contributions are welcome. If you're changing something non-trivial, you may
-want to submit an issue before creating a large pull request.
-
-
-## Running tests
-
-[Lab](https://github.com/hapijs/lab) is part of the hapi ecosystem and what we
-use to write all of our tests.
-
-```bash
-$ npm test
-
-# > frame@0.0.0 test /home/jedireza/projects/frame
-# > lab -c -L
-
-#  ..................................................
-#  ..................................................
-#  ..................................................
-#  ..............
-
-# 164 tests complete
-# Test duration: 14028 ms
-# No global variable leaks detected
-# Coverage: 100.00%
-# Linting results: No issues
-```
-
-### Targeted tests
-
-If you'd like to run a specific test or subset of tests you can use the
-`test-server` npm script.
-
-You specificy the path(s) via the `TEST_TARGET` environment variable like:
-
-```bash
-$ TEST_TARGET=test/server/web/main.js npm run test-server
-```
-
-## License
-
-MIT
-
-
-## Don't forget
-
-What you build with Frame is more important than Frame.
+Visit [Nx Cloud](https://nx.app/) to learn more.
